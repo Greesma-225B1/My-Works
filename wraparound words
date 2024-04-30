@@ -1,0 +1,276 @@
+import tkinter as tk
+import pygame
+import pyttsx3
+
+def intertwined_sequences(s1):
+    # Your intertwined_sequences function implementation goes here
+    if (ord(s1[1])-ord(s1[0]))==(ord(s1[2])-ord(s1[1])):
+        cst_st=ord(s1[1])-ord(s1[0])
+        no_of_intertwined_sequences = 0
+        return (no_of_intertwined_sequences,s1)
+    else:
+
+        l2=[]
+        i=0
+        while i<12 :
+            l2.append(s1[i:i+2])
+            i+=2
+        st1=l2[0]
+        st2=l2[1]
+        st3=l2[2]
+        st4=l2[3]
+        l4=[]
+        cst1= (ord(st2[1])-ord(st1[1]))
+        cst2=(ord(st3[1])-ord(st2[1]))
+        cst3=ord(st2[0])-ord(st1[0])
+        cst4=ord(st3[0])-ord(st2[0])
+        l4.append(cst1)
+        l4.append(cst2)
+        l4.append(cst3)
+        l4.append(cst4)
+        for i in range(len(l4)):
+             if l4[i]<0:
+                l4[i]+=26
+        if l4[1]==l4[0] and l4[2] == l4[3] :
+            cst_st1 = ord(st2[0])-ord(st1[0])
+            cst_st2 = ord(st2[1])-ord(st1[1])
+            no_of_intertwined_sequences = 2
+            return  ( no_of_intertwined_sequences , st1,st2)
+
+
+        else:
+            l3=[]
+            l1=[]
+            i=0
+            while i < 12:
+                l1.append(s1[i:i+3])
+                i+=3
+            st1=l1[0]
+            st2=l1[1]
+            st3=l1[2]
+            #st4=l1[3]
+            #for contsant step
+            cst1=(ord(st2[0])-ord(st1[0]))
+            cst2=(ord(st3[0])-ord(st2[0]))
+            cst3=(ord(st2[1])-ord(st1[1]))
+            cst4=(ord(st3[1])-ord(st2[1]))
+            cst5=(ord(st2[2])-ord(st1[2]))
+            cst6=(ord(st3[2])-ord(st2[2]))
+            l3=[]
+            l3.append(cst1)
+            l3.append(cst2)
+            l3.append(cst3)
+            l3.append(cst4)
+            l3.append(cst5)
+            l3.append(cst6)
+
+            if l3[0]==l3[1] and l3[2]==l3[3] and l3[4]==l3[5]  :
+                Cst_st_1=ord(st1[0])-ord(st2[0])
+                Cst_st_2=ord(st1[1])-ord(st2[1])
+                Cst_st_3=ord(st1[2])-ord(st2[2])
+                no_of_intertwined_sequences = 3
+                return (no_of_intertwined_sequences,st1,st2)
+
+
+# To find the constant step of the sequences
+def find_constant_step(s1):
+    # Your find_constant_step function implementation goes here
+    if intertwined_sequences(s1)[0] == 3:
+        st1 = intertwined_sequences(s1)[1]
+        st2 = intertwined_sequences(s1)[2]
+        step_1=ord(st2[0])-ord(st1[0])
+        step_2=ord(st2[1])-ord(st1[1])
+        step_3=ord(st2[2])-ord(st1[2])
+        lst=[step_1,step_2,step_3]
+        for k in range(len(lst)):
+            if lst[k]<0:
+                lst[k]+=26  
+        return lst
+    # to extend the sequences
+    elif intertwined_sequences(s1)[0]==2:
+        st1 = intertwined_sequences(s1)[1]
+        st2 = intertwined_sequences(s1)[2]
+        step_1 = ord(st2[0])-ord(st1[0])
+        step_2 = ord(st2[1])-ord(st1[1])
+        lst = [step_1,step_2]
+        for k in range(len(lst)):
+            if lst[k]<0:
+                lst[k]+=26
+        return lst
+    else :
+        step = ord(s1[1]-ord[s1[0]])
+        if step<0:
+            step_1=step+26
+        return step_1
+# to extend each intertwined sequence
+alphabets="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+# To extend the sequences
+def extended_sequence(s):
+    # Your extended_sequence function implementation goes here
+    y=len(s)
+    if intertwined_sequences(s)[0]==3:
+        lst_st = s[(y-3):y]
+        seq1=lst_st[0]
+        seq2=lst_st[1]
+        seq3=lst_st[2]
+        h=[seq1,seq2,seq3]
+        z=find_constant_step(s)
+        lsq1=[]
+        lsq2=[]
+        lsq3=[]
+        i=0
+        while i<4:
+
+             try:
+                j = (alphabets.index(seq1)+z[0])%26
+                k=(alphabets.index(seq2)+z[1])%26
+                l=(alphabets.index(seq3)+z[2])%26
+                lsq1.append(alphabets[j])
+                lsq2.append(alphabets[k])
+                lsq3.append(alphabets[l])
+             except ValueError:
+                    lsq1.append(seq1)
+                    lsq2.append(seq2)
+                    lsq3.append(seq3)
+             seq1=lsq1[i]
+             seq2=lsq2[i]
+             seq3=lsq3[i]
+             i+=1
+        extended = ""
+        print(extended)
+        for s in range(4):
+            extended += lsq1[s]+lsq2[s]+lsq3[s]
+
+    elif intertwined_sequences(s)[0]==2:
+        lst_st = s[(y-2):y]
+        seq1=lst_st[0]
+        seq2=lst_st[1]
+        z=find_constant_step(s)
+        lsq1=[]
+        lsq2=[]
+        i=0
+        while i<6:
+
+             try:
+                j = (alphabets.index(seq1)+z[0])%26
+                k=(alphabets.index(seq2)+z[1])%26
+                lsq1.append(alphabets[j])
+                lsq2.append(alphabets[k])
+             except ValueError:
+                    lsq1.append(seq1)
+                    lsq2.append(seq2)
+             seq1=lsq1[i]
+             seq2=lsq2[i]
+             i+=1
+        extended = ""
+        print(extended)
+        for s in range(6):
+            extended += lsq1[s]+lsq2[s]
+    else:
+        lst_st = s[(y-1):y]
+        seq1=lst_st[0]
+        z=find_constant_step(s)
+        i=0
+        extended = ""
+        while i<12:
+
+             try:
+                j = (alphabets.index(seq1)+z)%26
+                extended += alphabets[j]
+             except ValueError:
+                extended += seq1
+    return extended
+
+
+class MyWindow:
+    def __init__(self, win, input_string):
+        self.input_string = input_string
+        
+        self.string1_label = tk.Label(win, text="Enter a string 1:")
+        self.string2_label = tk.Label(win, text="Enter a string 2:")
+        self.result_button = tk.Button(win, text="Result", command=self.add, padx=15, pady=10)
+
+        self.t1 = tk.Entry(win, bd=3)
+        self.t2 = tk.Entry(win)
+        self.t3 = tk.Entry(win)
+        self.t4 = tk.Entry(win)
+        
+        self.string1_label.place(x=100, y=50)
+        self.t1.place(x=200, y=50)
+        self.string2_label.place(x=100, y=100)
+        self.t2.place(x=200, y=100)
+        self.t3.place(x=200, y=200)
+        self.result_button.place(x=100, y=150)
+        self.t4.place(x=200, y=150)
+
+    def add(self):
+        string1 = self.t1.get()
+        string2 = self.t2.get()
+        extended_str1 = extended_sequence(string1)
+        extended_str2 = extended_sequence(string2)
+        self.t3.delete(0, tk.END)
+        self.t4.delete(0, tk.END)
+        self.t3.insert(tk.END, extended_str1)
+        self.t4.insert(tk.END, extended_str2)
+
+def start():
+    win = tk.Tk()
+    win.title("wraparound words")
+    win.geometry("950x950")
+
+    pygame.mixer.init()
+    pygame.mixer.music.load(r"dont go too far.ogg") 
+    pygame.mixer.music.play(-1) 
+
+    image_path = r"WhatsApp Image 2023-08-05 at 13.00.12.png"
+    background_image = tk.PhotoImage(file=image_path)
+    background_image = background_image.subsample(2)
+
+    # Create a label widget with the background image
+    background_label = tk.Label(win, image=background_image)
+    background_label.pack(fill=tk.BOTH, expand=tk.YES)  # Use pack to fill the window
+
+    def next_window():
+        input_string = entry.get()
+        pygame.mixer.music.stop()  # Stop the background music
+        win.destroy()  # Close the current window
+
+        next_win = tk.Tk()
+        next_win.title("Next Window")
+        next_win.geometry("700x700")
+        
+        text_speech = pyttsx3.init()
+        text_speech.setProperty("rate",150)  
+        text_speech.say("our project is wraparound words.")
+        text_speech.say("the sequence is said to have a constant step if the distance between adjacent characters in the sequence is same.")
+        text_speech.say("two or more sequences are said to be interwined if their adjacent elements are separeted by one or more elements.")
+        text_speech.say("Now enter the string1 and string 2")
+        text_speech.runAndWait()
+        
+        
+        pygame.mixer.init()
+        pygame.mixer.music.load(r"귀여운 피아노 연주곡 #Pianocover #CutePiano [TubeRipper.com].ogg") 
+        pygame.mixer.music.play(-1) 
+        
+        image_path1=r"WAPP.png"
+        background_image1=tk.PhotoImage(file=image_path1)
+        background_label1=tk.Label(next_win,image=background_image1)
+        background_label1.pack(fill=tk.BOTH,expand=tk.YES)
+        #entry = tk.Entry(next_win, bd=3)
+        #entry.place(x=200, y=300)
+
+        MyWindow(next_win, input_string)
+
+        next_win.mainloop()
+
+    entry = tk.Entry(win, bd=3)
+    entry.place(x=200, y=300)
+
+    start_button = tk.Button(win, text="Start", bg="#367588", fg="#fff", font=("Helvetica", 30, "bold", "italic"), command=next_window)
+    start_button.pack(pady=10)
+    start_button.config(width=15, height=3)
+
+    win.mainloop()
+
+# Call the start function to run the Tkinter application
+start()
